@@ -1,0 +1,66 @@
+# OpenClaw Security Shield Configuration
+# Version: 1.0.0
+
+security:
+  scan_on_install: true
+  block_malicious: true
+  quarantine_dir: ./quarantine
+
+  keys_file: ./config/.keyring
+
+api_key:
+  encryption: true
+  auto_rotate: true
+  rotation_interval: 86400  # 24 hours
+
+  warning_threshold: 3  # Number of warnings before alert
+
+network:
+  monitor: true
+  auto_block: true
+  whitelist:
+    - api.openai.com
+    - api.anthropic.com
+    - api.openclaw.ai
+    - "*.cdn.openclaw.ai"
+    - localhost
+    - "127.0.0.1"
+  blacklist_file: ./config/blacklist.txt
+  connection_timeout: 30  # seconds
+
+  max_connections_per_ip: 10
+
+logging:
+  level: INFO
+  file: ./logs/security.log
+  encrypt_logs: false
+  retention_days: 90
+  max_log_size: 100MB
+
+threat_detection:
+  enabled: true
+  sensitivity: high  # low, medium, high
+  auto_block: true
+  rules_file: ./config/threat_rules.yaml
+  confidence_threshold: 0.7  # Minimum confidence to report threat
+
+audit:
+  database: ./data/audit.db
+  retention_days: 90
+  export_format: json  # json, html, text
+
+  auto_cleanup: true
+
+skills:
+  directory: ~/.openclaw/workspace/skills
+  auto_scan: true
+  require_approval: false
+  max_file_size: 10MB  # Maximum skill file size
+  allowed_extensions:
+    - .py
+    - .js
+    - .ts
+
+    - .json
+    - .yaml
+    - .yml

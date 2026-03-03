@@ -1,0 +1,125 @@
+# OpenClaw Security Shield - Custom Threat Detection Rules
+# Version: 1.0.0
+
+rules:
+  # Rule 1: Detect suspicious subprocess usage
+  - id: rule_001
+    type: subprocess_abuse
+    severity: HIGH
+    message: "Suspicious subprocess usage detected"
+    conditions:
+      - type: import
+        value: subprocess
+      - type: function
+        value: call
+      - type: function
+        value: Popen
+      - type: function
+        value: run
+    remediation: "Review subprocess calls for necessity"
+
+  # Rule 2: Detect socket connections
+  - id: rule_002
+    type: network_connection
+    severity: HIGH
+    message: "Network socket connection detected"
+    conditions:
+      - type: import
+        value: socket
+    remediation: "Verify network connections are legitimate"
+
+  # Rule 3: Detect environment variable collection
+  - id: rule_003
+    type: env_collection
+    severity: MEDIUM
+    message: "Environment variable access detected"
+    conditions:
+      - type: function
+        value: environ
+      - type: function
+        value: getenv
+    remediation: "Ensure environment access is necessary"
+
+  # Rule 4: Detect base64 encoded content
+  - id: rule_004
+    type: obfuscation
+    severity: MEDIUM
+    message: "Base64 encoded content detected - potential obfuscation"
+    conditions:
+      - type: import
+        value: base64
+    remediation: "Review base64 usage for potential obfuscation"
+
+  # Rule 5: Detect pickle usage (unsafe deserialization)
+  - id: rule_005
+    type: unsafe_deserialization
+    severity: HIGH
+    message: "Pickle usage detected - potential unsafe deserialization"
+    conditions:
+      - type: import
+        value: pickle
+    remediation: "Use safer serialization methods like JSON"
+
+  # Rule 6: Detect dynamic code execution
+  - id: rule_006
+    type: code_execution
+    severity: CRITICAL
+    message: "Dynamic code execution detected"
+    conditions:
+      - type: function
+        value: eval
+      - type: function
+        value: exec
+      - type: function
+        value: compile
+    remediation: "Remove dynamic code execution"
+
+  # Rule 7: Detect credential patterns
+  - id: rule_007
+    type: credential_theft
+    severity: CRITICAL
+    message: "Credential pattern detected in code"
+    conditions:
+      - type: pattern
+        value: credential_theft
+    remediation: "Remove hardcoded credentials immediately"
+
+  # Rule 8: Detect file system modification
+  - id: rule_008
+    type: filesystem_modification
+    severity: MEDIUM
+    message: "File system modification functions detected"
+    conditions:
+      - type: function
+        value: remove
+      - type: function
+        value: unlink
+      - type: function
+        value: rmdir
+      - type: function
+        value: rename
+    remediation: "Review file system modifications"
+
+  # Rule 9: Detect external HTTP requests
+  - id: rule_009
+    type: data_exfiltration
+    severity: MEDIUM
+    message: "External HTTP request detected
+    conditions:
+      - type: import
+        value: requests
+      - type: import
+        value: urllib
+    remediation: "Verify external requests are necessary and safe"
+
+  # Rule 10: Detect reverse shell patterns
+  - id: rule_010
+    type: reverse_shell
+    severity: CRITICAL
+    message: "Reverse shell pattern detected"
+    conditions:
+      - type: import
+        value: socket
+      - type: function
+        value: connect
+    remediation: "Remove reverse shell code immediately"

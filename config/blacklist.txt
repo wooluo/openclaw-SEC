@@ -1,0 +1,16 @@
+# OpenClaw Security Shield - IP/Domain Blacklist
+# Add malicious IPs and domains here (one per line)
+# Lines starting with # are comments
+# Example entries:
+
+# Known malicious IPs (examples - update with real threat intel)
+# 185.220.101.1
+# 192.168.1.100
+
+# Known malicious domains
+# malicious-example.com
+# evil-domain.net
+
+# Tor exit nodes
+# 10.0.0.1
+# 172.16.0.1

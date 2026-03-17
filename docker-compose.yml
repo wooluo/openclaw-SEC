@@ -1,0 +1,106 @@
+# Docker Compose configuration for OpenClaw Security Shield
+version: '3.8'
+
+services:
+  # Main Security Shield Service
+  shield:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: openclaw-shield:latest
+    container_name: openclaw-shield
+    restart: unless-stopped
+    environment:
+      - OPENCLAW_CONFIG_DIR=/config
+      - OPENCLAW_DATA_DIR=/data
+      - OPENCLAW_LOG_DIR=/logs
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config:/config:ro
+      - shield-data:/data
+      - shield-logs:/logs
+      - shield-quarantine:/quarantine
+      # Mount skills directory for scanning
+      - ${SKILLS_DIR:-./skills}:/skills:ro
+    ports:
+      - "8000:8000"  # Future API port
+    networks:
+      - openclaw-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "from openclaw_shield import SecurityShield; SecurityShield().status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Redis for caching and message queue (future use)
+  redis:
+    image: redis:7-alpine
+    container_name: openclaw-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-openclaw}
+    volumes:
+      - redis-data:/data
+    networks:
+      - openclaw-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # PostgreSQL for cloud platform (future use)
+  postgres:
+    image: postgres:15-alpine
+    container_name: openclaw-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-openclaw}
+      - POSTGRES_USER=${POSTGRES_USER:-openclaw}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-openclaw}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - openclaw-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-openclaw}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Monitoring service (future use)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: openclaw-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - openclaw-net
+    ports:
+      - "9090:9090"
+
+volumes:
+  shield-data:
+    driver: local
+  shield-logs:
+    driver: local
+  shield-quarantine:
+    driver: local
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  prometheus-data:
+    driver: local
+
+networks:
+  openclaw-net:
+    driver: bridge

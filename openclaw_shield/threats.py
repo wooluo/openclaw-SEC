@@ -144,6 +144,72 @@ class ThreatDetector:
             'severity': 'CRITICAL',
             'description': 'API key harvesting',
             'remediation': 'Block unauthorized API key access'
+        },
+        # Additional 2026 CVE categories
+        'missing_auth': {
+            'severity': 'HIGH',
+            'description': 'Missing authentication (CVE-2026-26319)',
+            'remediation': 'Add authentication validation for all endpoints'
+        },
+        'file_upload_traversal': {
+            'severity': 'HIGH',
+            'description': 'File upload path traversal (CVE-2026-26329)',
+            'remediation': 'Validate and sanitize all filenames from uploads'
+        },
+        'image_tool_ssrf': {
+            'severity': 'HIGH',
+            'description': 'Image tool SSRF (GHSA-56f2-hvwg-5743)',
+            'remediation': 'Whitelist allowed image sources'
+        },
+        'urbit_auth_ssrf': {
+            'severity': 'MEDIUM',
+            'description': 'Urbit authentication SSRF (GHSA-pg2v-8xwh-qhcc)',
+            'remediation': 'Validate all redirect/callback URLs'
+        },
+        'webhook_auth_bypass': {
+            'severity': 'MEDIUM',
+            'description': 'Webhook authentication bypass (GHSA-c37p-4qqg-3p76)',
+            'remediation': 'Always validate webhook signatures'
+        },
+        'path_hijacking': {
+            'severity': 'CRITICAL',
+            'description': 'PATH hijacking (CVE-2026-29610)',
+            'remediation': 'Use absolute paths, never modify PATH from user input'
+        },
+        'websocket_brute_force': {
+            'severity': 'CRITICAL',
+            'description': 'WebSocket brute force (ClawJacked)',
+            'remediation': 'Rate limit all auth attempts including localhost'
+        },
+        'auto_device_approval': {
+            'severity': 'HIGH',
+            'description': 'Auto device approval vulnerability (ClawJacked)',
+            'remediation': 'Always require user confirmation for device pairing'
+        },
+        'log_poisoning': {
+            'severity': 'HIGH',
+            'description': 'Log poisoning attack',
+            'remediation': 'Sanitize all input before logging'
+        },
+        'indirect_prompt_injection': {
+            'severity': 'HIGH',
+            'description': 'Indirect prompt injection',
+            'remediation': 'Sanitize external content before using in prompts'
+        },
+        'infostealer': {
+            'severity': 'CRITICAL',
+            'description': 'Credential infostealer malware',
+            'remediation': 'Remove immediately - this is malware'
+        },
+        'shadow_ai': {
+            'severity': 'MEDIUM',
+            'description': 'Shadow AI operations',
+            'remediation': 'Ensure all AI operations are logged and visible'
+        },
+        'tool_injection': {
+            'severity': 'HIGH',
+            'description': 'LLM tool injection',
+            'remediation': 'Validate all tool parameters before execution'
         }
     }
 
@@ -307,6 +373,14 @@ class ThreatDetector:
                     # Add CVE reference if present
                     if 'cve' in rule:
                         threat['cve'] = rule['cve']
+
+                    # Add GHSA reference if present
+                    if 'ghsa' in rule:
+                        threat['ghsa'] = rule['ghsa']
+
+                    # Add attack name if present
+                    if 'attack_name' in rule:
+                        threat['attack_name'] = rule['attack_name']
 
                     # Add reference links if present
                     if 'references' in rule:

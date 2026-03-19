@@ -400,3 +400,225 @@ rules:
       - type: string
         value: http.*exfiltrate|requests\.post|urllib\.request
     remediation: "Block unauthorized API key access"
+
+  # ========================================
+  # Additional 2026 CVE-Based Rules
+  # ========================================
+
+  # CVE-2026-26319: Missing Telnyx webhook authentication
+  - id: cve_2026_26319_webhook
+    type: missing_auth
+    severity: HIGH
+    cve: "CVE-2026-26319"
+    message: "Missing webhook authentication detected"
+    conditions:
+      - type: pattern
+        value: webhook|telnyx|twilio
+      - type: import
+        value: flask
+      - type: import
+        value: fastapi
+      - type: pattern
+        value: "@app\\.route|@router\\.post"
+    remediation: "Add authentication validation for all webhook endpoints"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-26319"
+
+  # CVE-2026-26329: Path traversal in browser upload
+  - id: cve_2026_26329_upload
+    type: file_upload_traversal
+    severity: HIGH
+    cve: "CVE-2026-26329"
+    message: "Path traversal in file upload detected"
+    conditions:
+      - type: pattern
+        value: upload|file.*save|save.*file
+      - type: function
+        value: open
+      - type: string
+        value: filename|filepath
+    remediation: "Validate and sanitize all filenames from uploads"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-26329"
+
+  # GHSA-56f2-hvwg-5743: SSRF in image tool
+  - id: ghsa_56f2_image_ssrf
+    type: image_tool_ssrf
+    severity: HIGH
+    ghsa: "GHSA-56f2-hvwg-5743"
+    message: "SSRF via image URL parameter detected"
+    conditions:
+      - type: import
+        value: requests
+      - type: function
+        value: get
+      - type: pattern
+        value: image.*url|img.*url|picture.*url
+      - type: pattern
+        value: user.*input|request\.args|query.*param
+    remediation: "Whitelist allowed image sources, never fetch arbitrary URLs"
+
+  # GHSA-pg2v-8xwh-qhcc: SSRF in Urbit authentication
+  - id: ghsa_pg2v_urbit_ssrf
+    type: urbit_auth_ssrf
+    severity: MEDIUM
+    ghsa: "GHSA-pg2v-8xwh-qhcc"
+    message: "Potential SSRF in authentication flow"
+    conditions:
+      - type: pattern
+        value: urbit|authentication|oauth|callback
+      - type: function
+        value: requests.get
+      - type: pattern
+        value: redirect|callback|return.*url
+    remediation: "Validate all redirect/callback URLs against whitelist"
+
+  # GHSA-c37p-4qqg-3p76: Twilio webhook auth bypass
+  - id: ghsa_c37p_webhook_bypass
+    type: webhook_auth_bypass
+    severity: MEDIUM
+    ghsa: "GHSA-c37p-4qqg-3p76"
+    message: "Webhook authentication bypass detected"
+    conditions:
+      - type: pattern
+        value: webhook|twilio|sms
+      - type: function
+        value: request
+      - type: pattern
+        value: if.*not.*auth|skip.*auth|bypass
+    remediation: "Always validate webhook signatures, never skip auth"
+
+  # CVE-2026-29610: Command Hijacking via Unsafe PATH
+  - id: cve_2026_29610_path_hijack
+    type: path_hijacking
+    severity: CRITICAL
+    cve: "CVE-2026-29610"
+    message: "Command hijacking via PATH manipulation detected"
+    conditions:
+      - type: import
+        value: os
+      - type: function
+        value: system
+      - type: function
+        value: popen
+      - type: string
+        value: PATH
+      - type: pattern
+        value: \.putenv|\.setenv|environ\[.*PATH
+    remediation: "Use absolute paths, never modify PATH from user input"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-29610"
+
+  # ClawJacked: Localhost WebSocket Brute Force
+  - id: clawjacked_ws_brute
+    type: websocket_brute_force
+    severity: CRITICAL
+    cve: "CVE-2026-25253"
+    attack_name: "ClawJacked"
+    message: "Potential WebSocket brute force pattern (ClawJacked)"
+    conditions:
+      - type: import
+        value: websocket
+      - type: pattern
+        value: localhost|127\.0\.0\.1|0\.0\.0\.0
+      - type: pattern
+        value: password|token|auth
+      - type: function
+        value: connect
+    remediation: "Rate limit all auth attempts, including localhost"
+    references:
+      - "https://www.oasis.security/blog/openclaw-vulnerability"
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-25253"
+
+  # ClawJacked: Auto-approve device registration
+  - id: clawjacked_auto_approve
+    type: auto_device_approval
+    severity: HIGH
+    attack_name: "ClawJacked"
+    message: "Auto device approval from localhost detected"
+    conditions:
+      - type: pattern
+        value: register.*device|pair.*device|add.*node
+      - type: string
+        value: localhost
+      - type: pattern
+        value: auto.*approve|skip.*confirm|no.*prompt
+    remediation: "Always require user confirmation for device pairing"
+
+  # Log Poisoning Attack
+  - id: log_poisoning
+    type: log_poisoning
+    severity: HIGH
+    message: "Log poisoning pattern detected"
+    conditions:
+      - type: import
+        value: logging
+      - type: function
+        value: info|debug|error
+      - type: pattern
+        value: \{.*\}|%s|%d|\.format
+      - type: string
+        value: User-Agent|X-Forwarded-|Referer
+    remediation: "Sanitize all input before logging"
+
+  # Indirect Prompt Injection
+  - id: indirect_prompt_injection
+    type: indirect_prompt_injection
+    severity: HIGH
+    message: "Indirect prompt injection via content detected"
+    conditions:
+      - type: pattern
+        value: fetch.*url|read.*file|load.*content
+      - type: function
+        value: requests.get
+      - type: function
+        value: open
+      - type: pattern
+        value: prompt|instruction|system
+    remediation: "Sanitize external content before using in prompts"
+
+  # InfoStealer Pattern
+  - id: infostealer_pattern
+    type: infostealer
+    severity: CRITICAL
+    message: "InfoStealer behavior pattern detected"
+    conditions:
+      - type: function
+        value: environ
+      - type: function
+        value: getenv
+      - type: pattern
+        value: password|secret|key|token|cookie|credential
+      - type: import
+        value: requests
+      - type: function
+        value: post
+    remediation: "This appears to be credential theft malware"
+
+  # AI Agent Shadow Operations
+  - id: shadow_ai_operations
+    type: shadow_ai
+    severity: MEDIUM
+    message: "Potential shadow AI operations detected"
+    conditions:
+      - type: pattern
+        value: --background|--daemon|--no-notify|--silent
+      - type: function
+        value: fork
+      - type: function
+        value: Popen
+    remediation: "Ensure all AI operations are logged and visible"
+
+  # LLM Tool Injection
+  - id: llm_tool_injection
+    type: tool_injection
+    severity: HIGH
+    message: "LLM tool injection pattern detected"
+    conditions:
+      - type: pattern
+        value: tool.*call|function.*call|execute.*tool
+      - type: string
+        value: user_input
+      - type: string
+        value: tool_name
+    remediation: "Validate all tool parameters before execution"

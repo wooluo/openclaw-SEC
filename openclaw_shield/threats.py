@@ -210,6 +210,132 @@ class ThreatDetector:
             'severity': 'HIGH',
             'description': 'LLM tool injection',
             'remediation': 'Validate all tool parameters before execution'
+        },
+        # Extended 2026 CVE categories
+        'device_confirmation_bypass': {
+            'severity': 'CRITICAL',
+            'description': 'Device confirmation bypass (CVE-2026-28472)',
+            'remediation': 'Always require explicit device confirmation'
+        },
+        'config_override': {
+            'severity': 'HIGH',
+            'description': 'Configuration override vulnerability (CVE-2026-4039)',
+            'remediation': 'Validate all config overrides from skills'
+        },
+        'zip_slip': {
+            'severity': 'HIGH',
+            'description': 'Zip Slip path traversal (CVE-2026-28453)',
+            'remediation': 'Validate all archive entry paths before extraction'
+        },
+        'workspace_path_leak': {
+            'severity': 'MEDIUM',
+            'description': 'Workspace path in system prompt (CVE-2026-27001)',
+            'remediation': 'Never embed workspace paths in agent prompts'
+        },
+        'security_bypass': {
+            'severity': 'HIGH',
+            'description': 'Security bypass (CVE-2026-28363)',
+            'remediation': 'Never allow security controls to be bypassed'
+        },
+        'input_validation_bypass': {
+            'severity': 'HIGH',
+            'description': 'Input validation bypass (CVE-2026-26327)',
+            'remediation': 'Validate all input before processing'
+        },
+        'jwt_algorithm_confusion': {
+            'severity': 'HIGH',
+            'description': 'JWT algorithm confusion (CVE-2026-22817)',
+            'remediation': 'Always verify JWT algorithm'
+        },
+        'jwks_missing_alg': {
+            'severity': 'HIGH',
+            'description': 'JWKS missing algorithm (CVE-2026-22818)',
+            'remediation': 'Always validate algorithm field in JWT/JWKS'
+        },
+        'hook_path_traversal': {
+            'severity': 'HIGH',
+            'description': 'Hook path traversal (CVE-2026-28393)',
+            'remediation': 'Validate and restrict all module paths'
+        },
+        'unauthenticated_config': {
+            'severity': 'CRITICAL',
+            'description': 'Unauthenticated config tampering',
+            'remediation': 'Always require authentication for config endpoints'
+        },
+        'frontmatter_traversal': {
+            'severity': 'HIGH',
+            'description': 'Frontmatter directory traversal',
+            'remediation': 'Validate skill names against strict allowlist'
+        },
+        'prompt_replay': {
+            'severity': 'HIGH',
+            'description': 'Prompt injection replay attack',
+            'remediation': 'Mark external content as untrusted'
+        },
+        'mdns_info_disclosure': {
+            'severity': 'MEDIUM',
+            'description': 'mDNS information disclosure',
+            'remediation': 'Disable mDNS or filter sensitive information'
+        },
+        'memory_poisoning': {
+            'severity': 'HIGH',
+            'description': 'Memory file poisoning (SOUL.md/MEMORY.md)',
+            'remediation': 'Validate content written to memory files'
+        },
+        'atomic_stealer': {
+            'severity': 'CRITICAL',
+            'description': 'Atomic Stealer (AMOS) malware',
+            'remediation': 'Known malware - do not execute'
+        },
+        'delayed_payload': {
+            'severity': 'HIGH',
+            'description': 'Delayed payload activation',
+            'remediation': 'Skill may hide malicious behavior'
+        },
+        'cloud_metadata_ssrf': {
+            'severity': 'CRITICAL',
+            'description': 'Cloud metadata SSRF',
+            'remediation': 'Block access to metadata endpoints'
+        },
+        'localhost_trust_bypass': {
+            'severity': 'HIGH',
+            'description': 'Localhost trust bypass',
+            'remediation': 'Never trust proxy headers for access control'
+        },
+        'shell_hijacking': {
+            'severity': 'CRITICAL',
+            'description': 'SHELL environment hijacking',
+            'remediation': 'Never use SHELL from environment in commands'
+        },
+        'macos_persistence': {
+            'severity': 'CRITICAL',
+            'description': 'macOS LaunchAgent persistence',
+            'remediation': 'Never modify system persistence mechanisms'
+        },
+        'shell_profile_persistence': {
+            'severity': 'HIGH',
+            'description': 'Shell profile persistence',
+            'remediation': 'Never modify shell profiles'
+        },
+        'hidden_css_injection': {
+            'severity': 'HIGH',
+            'description': 'Hidden CSS prompt injection',
+            'remediation': 'Strip CSS before processing web content'
+        },
+        'runaway_api_cost': {
+            'severity': 'MEDIUM',
+            'description': 'Runaway API cost pattern',
+            'remediation': 'Implement rate limits and cost caps'
+        },
+        'oauth_overreach': {
+            'severity': 'HIGH',
+            'description': 'OAuth scope overreach',
+            'remediation': 'Use minimum required OAuth scopes'
+        },
+        'dns_tunneling': {
+            'severity': 'HIGH',
+            'description': 'DNS tunneling exfiltration',
+            'remediation': 'Monitor DNS for suspicious patterns'
         }
     }
 

@@ -622,3 +622,398 @@ rules:
       - type: string
         value: tool_name
     remediation: "Validate all tool parameters before execution"
+
+  # ========================================
+  # Additional 2026 CVE-Based Rules (Extended)
+  # ========================================
+
+  # CVE-2026-28472: Device confirmation bypass
+  - id: cve_2026_28472_device_bypass
+    type: device_confirmation_bypass
+    severity: CRITICAL
+    cve: "CVE-2026-28472"
+    message: "WebSocket handshake device confirmation bypass detected"
+    conditions:
+      - type: import
+        value: websocket
+      - type: pattern
+        value: handshake|connect.*handshake|device.*confirm
+      - type: pattern
+        value: skip.*confirm|bypass.*verify|auto.*pair
+    remediation: "Always require explicit device confirmation"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28472"
+
+  # CVE-2026-4039: Config override vulnerability
+  - id: cve_2026_4039_config_override
+    type: config_override
+    severity: HIGH
+    cve: "CVE-2026-4039"
+    message: "Skill configuration environment override detected"
+    conditions:
+      - type: pattern
+        value: applySkillConfigenvOverrides|config.*override|env.*override
+      - type: function
+        value: environ
+      - type: pattern
+        value: process\.env|os\.environ
+    remediation: "Validate all config overrides from skills"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-4039"
+
+  # CVE-2026-28453: Zip Slip path traversal
+  - id: cve_2026_28453_zip_slip
+    type: zip_slip
+    severity: HIGH
+    cve: "CVE-2026-28453"
+    message: "Zip Slip path traversal in archive extraction detected"
+    conditions:
+      - type: import
+        value: tarfile
+      - type: import
+        value: zipfile
+      - type: function
+        value: extract
+      - type: pattern
+        value: \.\./|\.\.\\
+    remediation: "Validate all archive entry paths before extraction"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28453"
+
+  # CVE-2026-27001: Workspace path in system prompt
+  - id: cve_2026_27001_workspace_leak
+    type: workspace_path_leak
+    severity: MEDIUM
+    cve: "CVE-2026-27001"
+    message: "Workspace path embedded in agent system prompt detected"
+    conditions:
+      - type: pattern
+        value: cwd|workspace|working.*dir|getcwd
+      - type: pattern
+        value: system.*prompt|agent.*prompt|context.*prompt
+      - type: string
+        value: path
+    remediation: "Never embed workspace paths in agent prompts"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-27001"
+
+  # CVE-2026-28363: Security bypass
+  - id: cve_2026_28363_bypass
+    type: security_bypass
+    severity: HIGH
+    cve: "CVE-2026-28363"
+    message: "Security bypass vulnerability detected"
+    conditions:
+      - type: pattern
+        value: bypass|skip.*check|override.*security
+      - type: function
+        value: hasattr
+      - type: pattern
+        value: __security__|__auth__|__protected__
+    remediation: "Never allow security controls to be bypassed"
+    references:
+      - "https://www.cnvd.org.cn/flaw/show/CNVD-2026-13590"
+
+  # CVE-2026-26327: Additional high-severity vulnerability
+  - id: cve_2026_26327
+    type: input_validation_bypass
+    severity: HIGH
+    cve: "CVE-2026-26327"
+    message: "Input validation bypass detected"
+    conditions:
+      - type: pattern
+        value: user.*input|external.*input|untrusted.*input
+      - type: pattern
+        value: eval|exec|compile
+      - type: function
+        value: getattr
+    remediation: "Validate all input before processing"
+    references:
+      - "https://blog.topsec.com.cn/openclaw-mechanism-security-research/"
+
+  # CVE-2026-22817: JWT middleware vulnerability
+  - id: cve_2026_22817_jwt
+    type: jwt_algorithm_confusion
+    severity: HIGH
+    cve: "CVE-2026-22817"
+    message: "JWT middleware algorithm confusion vulnerability"
+    conditions:
+      - type: import
+        value: jwt
+      - type: pattern
+        value: HS256|algorithm.*none|verify.*false
+      - type: function
+        value: decode
+    remediation: "Always verify JWT algorithm and use proper signature verification"
+
+  # CVE-2026-22818: JWKS middleware vulnerability
+  - id: cve_2026_22818_jwks
+    type: jwks_missing_alg
+    severity: HIGH
+    cve: "CVE-2026-22818"
+    message: "JWKS middleware missing algorithm field vulnerability"
+    conditions:
+      - type: pattern
+        value: jwks|jwk.*set|key.*set
+      - type: pattern
+        value: alg.*field|algorithm.*missing
+    remediation: "Always validate algorithm field in JWT/JWKS"
+
+  # CVE-2026-28393: Hook transform path validation
+  - id: cve_2026_28393_hook_path
+    type: hook_path_traversal
+    severity: HIGH
+    cve: "CVE-2026-28393"
+    message: "Hook transform module path traversal vulnerability"
+    conditions:
+      - type: pattern
+        value: hook.*transform|module.*load|load.*module
+      - type: string
+        value: path
+      - type: pattern
+        value: absolute|/\.\./|\\\\\.\\
+    remediation: "Validate and restrict all module paths"
+
+  # ========================================
+  # Attack Pattern Detection Rules (Extended)
+  # ========================================
+
+  # Nostr profile API unauthenticated config tampering
+  - id: nostr_config_tampering
+    type: unauthenticated_config
+    severity: CRITICAL
+    message: "Unauthenticated Nostr profile API config tampering detected"
+    conditions:
+      - type: pattern
+        value: nostr|profile.*api|config.*api
+      - type: function
+        value: request
+      - type: pattern
+        value: "@app\\.route|@router\\.(get|post|put)"
+      - type: pattern
+        value: config|settings|preferences
+    remediation: "Always require authentication for config endpoints"
+
+  # Frontmatter-controlled skill name directory traversal
+  - id: frontmatter_traversal
+    type: frontmatter_traversal
+    severity: HIGH
+    message: "Directory traversal via frontmatter-controlled skill name"
+    conditions:
+      - type: pattern
+        value: frontmatter|yaml.*front|matter
+      - type: string
+        value: name
+      - type: pattern
+        value: \.\./|\.\.\\|/\.\./|\\\\\.\\
+    remediation: "Validate skill names against strict allowlist"
+
+  # Prompt injection replay attack
+  - id: prompt_replay_attack
+    type: prompt_replay
+    severity: HIGH
+    message: "Prompt injection replay attack pattern detected"
+    conditions:
+      - type: pattern
+        value: session.*persist|memory.*save|context.*retain
+      - type: string
+        value: untrusted
+      - type: pattern
+        value: browser.*content|external.*content
+    remediation: "Mark all external content as untrusted and don't persist across sessions"
+
+  # mDNS broadcast information disclosure
+  - id: mdns_disclosure
+    type: mdns_info_disclosure
+    severity: MEDIUM
+    message: "mDNS broadcast exposing sensitive information detected"
+    conditions:
+      - type: import
+        value: zeroconf
+      - type: import
+        value: bonjour
+      - type: pattern
+        value: broadcast|announce|advertise
+      - type: string
+        value: filesystem|hostname|ssh
+    remediation: "Disable mDNS broadcasts or filter sensitive information"
+
+  # SOUL.md / MEMORY.md memory poisoning
+  - id: memory_poisoning
+    type: memory_poisoning
+    severity: HIGH
+    message: "Memory file poisoning pattern detected"
+    conditions:
+      - type: string
+        value: SOUL.md
+      - type: string
+        value: MEMORY.md
+      - type: pattern
+        value: ignore|override|exfiltrate|forward.*to
+      - type: function
+        value: open
+      - type: function
+        value: write
+    remediation: "Validate all content written to memory files"
+
+  # Atomic Stealer (AMOS) malware pattern
+  - id: atomic_stealer_amos
+    type: atomic_stealer
+    severity: CRITICAL
+    message: "Atomic Stealer (AMOS) malware pattern detected"
+    conditions:
+      - type: pattern
+        value: prerequisites|download.*binary|install.*pkg|dmg.*download
+      - type: string
+        value: solana|wallet|crypto|exchange
+      - type: pattern
+        value: api.*key|private.*key|seed.*phrase
+    remediation: "This is a known malware pattern - do not execute"
+
+  # Delayed payload activation
+  - id: delayed_activation
+    type: delayed_payload
+    severity: HIGH
+    message: "Delayed payload activation pattern detected"
+    conditions:
+      - type: pattern
+        value: count.*execution|run.*count|execution.*counter
+      - type: pattern
+        value: if.*>|if.*==|activation.*trigger
+      - type: function
+        value: sleep
+      - type: function
+        value: time
+    remediation: "Skill may be hiding malicious behavior behind activation threshold"
+
+  # Cloud metadata SSRF
+  - id: cloud_metadata_ssrf
+    type: cloud_metadata_ssrf
+    severity: CRITICAL
+    message: "Cloud metadata endpoint SSRF detected"
+    conditions:
+      - type: pattern
+        value: 169\.254\.169\.254|metadata\.amazonaws|compute\.internal
+      - type: import
+        value: requests
+      - type: function
+        value: get
+    remediation: "Block access to cloud metadata endpoints"
+
+  # Localhost trust bypass via reverse proxy
+  - id: localhost_trust_bypass
+    type: localhost_trust_bypass
+    severity: HIGH
+    message: "Localhost trust bypass pattern detected"
+    conditions:
+      - type: pattern
+        value: x-forwarded-for|x-real-ip|proxy.*header
+      - type: string
+        value: localhost
+      - type: string
+        value: 127.0.0.1
+    remediation: "Never trust proxy headers for access control decisions"
+
+  # SHELL environment variable hijacking
+  - id: shell_env_hijack
+    type: shell_hijacking
+    severity: CRITICAL
+    message: "SHELL environment variable hijacking detected"
+    conditions:
+      - type: import
+        value: os
+      - type: string
+        value: SHELL
+      - type: pattern
+        value: homebrew|opt/homebrew|trusted.*prefix
+      - type: function
+        value: system
+    remediation: "Never use SHELL from environment in command execution"
+
+  # macOS LaunchAgent persistence
+  - id: macos_persistence_launchagent
+    type: macos_persistence
+    severity: CRITICAL
+    message: "macOS LaunchAgent persistence mechanism detected"
+    conditions:
+      - type: pattern
+        value: LaunchAgents|LaunchDaemons|~/Library/LaunchAgents
+      - type: string
+        value: plist
+      - type: function
+        value: write
+    remediation: "Skills should never modify system persistence mechanisms"
+
+  # Profile shell modification persistence
+  - id: shell_profile_persistence
+    type: shell_profile_persistence
+    severity: HIGH
+    message: "Shell profile modification persistence detected"
+    conditions:
+      - type: pattern
+        value: \.bashrc|\.zshrc|\.profile|\.bash_profile
+      - type: function
+        value: open
+      - type: function
+        value: append
+      - type: function
+        value: write
+    remediation: "Skills should never modify shell profiles"
+
+  # Hidden CSS instruction injection
+  - id: hidden_css_injection
+    type: hidden_css_injection
+    severity: HIGH
+    message: "Hidden CSS prompt injection pattern detected"
+    conditions:
+      - type: pattern
+        value: color:#fff|color:white|display:none|visibility:hidden|font-size:0
+      - type: pattern
+        value: <style|css|html.*hidden
+      - type: import
+        value: bs4
+    remediation: "Strip all CSS before processing web content"
+
+  # API cost runaway protection
+  - id: runaway_api_cost
+    type: runaway_api_cost
+    severity: MEDIUM
+    message: "Potential runaway API cost pattern detected"
+    conditions:
+      - type: pattern
+        value: while.*True|set.*interval|cron.*job
+      - type: function
+        value: sleep
+      - type: pattern
+        value: api|llm|completion|chat
+    remediation: "Implement rate limits and cost caps on API calls"
+
+  # OAuth scope overreach
+  - id: oauth_overreach
+    type: oauth_overreach
+    severity: HIGH
+    message: "OAuth scope overreach detected"
+    conditions:
+      - type: pattern
+        value: scope.*all|full.*access|read.*write|.*:\*
+      - type: string
+        value: oauth
+      - type: string
+        value: token
+    remediation: "Use minimum required OAuth scopes only"
+
+  # DNS tunneling exfiltration
+  - id: dns_tunneling
+    type: dns_tunneling
+    severity: HIGH
+    message: "DNS tunneling data exfiltration pattern detected"
+    conditions:
+      - type: import
+        value: socket
+      - type: function
+        value: sendto
+      - type: pattern
+        value: dns|query|nslookup|dig
+      - type: pattern
+        value: base64|encode
+    remediation: "Monitor DNS traffic for suspicious patterns"

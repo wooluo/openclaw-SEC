@@ -1436,3 +1436,419 @@ rules:
       - type: string
         value: env
     remediation: "Sanitize all skill environment overrides"
+
+  # ========================================
+  # Additional 2026 CVE-Based Rules (Round 5)
+  # ========================================
+
+  # CVE-2026-28491: Command Injection via cmd.exe Parsing Bypass
+  - id: cve_2026_28391_cmd_parsing
+    type: cmd_parsing_bypass
+    severity: CRITICAL
+    cve: "CVE-2026-28391"
+    cvss: 9.2
+    message: "Command injection via cmd.exe parsing bypass in allowlist enforcement detected"
+    conditions:
+      - type: pattern
+        value: cmd\.exe|\.cmd|\.bat
+      - type: string
+        value: allowlist
+      - type: function
+        value: spawn
+      - type: pattern
+        value: \\&\\&|\\|\||\`\\(
+    remediation: "Properly escape cmd.exe metacharacters in allowlist validation"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28391"
+      - "https://github.com/openclaw/openclaw/security/advisories/GHSA-qj77-c3c8-9c3q"
+
+  # CVE-2026-28446: Allowlist Bypass via Empty Caller ID
+  - id: cve_2026_28446_caller_id_bypass
+    type: allowlist_bypass_caller
+    severity: CRITICAL
+    cve: "CVE-2026-28446"
+    cvss: 9.2
+    ghsa: "GHSA-4rj2-gpmh-qq5x"
+    message: "Inbound allowlist bypass via empty caller ID and suffix matching detected"
+    conditions:
+      - type: string
+        value: voice-call
+      - type: pattern
+        value: callerId|caller.*id
+      - type: pattern
+        value: allowlist|allowed.*numbers
+      - type: string
+        value: ""
+    remediation: "Reject empty caller IDs, require explicit non-empty values"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28446"
+
+  # CVE-2026-28470: Exec Allowlist Bypass via Command Substitution
+  - id: cve_2026_28470_cmd_substitution
+    type: command_substitution_bypass
+    severity: CRITICAL
+    cve: "CVE-2026-28470"
+    cvss: 9.2
+    ghsa: "GHSA-3hcm-ggvf-rch5"
+    message: "Exec allowlist bypass via command substitution in double quotes detected"
+    conditions:
+      - type: pattern
+        value: \\$\\(|\\`\\`|"\\$\\(|\\"\\`\\`
+      - type: string
+        value: exec
+      - type: string
+        value: allowlist
+      - type: pattern
+        value: node.*invoke|spawn.*exec
+    remediation: "Disallow command substitution in all exec contexts"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28470"
+
+  # CVE-2026-28474: Allowlist Bypass via Display Name Spoofing
+  - id: cve_2026_28474_display_name_spoof
+    type: display_name_spoofing
+    severity: CRITICAL
+    cve: "CVE-2026-28474"
+    cvss: 9.3
+    ghsa: "GHSA-r5h9-vjqc-hq3r"
+    message: "Allowlist bypass via actor.name display name spoofing detected"
+    conditions:
+      - type: string
+        value: Nextcloud
+      - type: pattern
+        value: actor.*name|displayName|display.*name
+      - type: string
+        value: allowlist
+      - type: pattern
+        value: userId.*@|@.*userId
+    remediation: "Validate against immutable user IDs, not display names"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28474"
+
+  # CVE-2026-28456: Arbitrary Code Execution via Hook Module Path
+  - id: cve_2026_28456_hook_path_rce
+    type: hook_module_rce
+    severity: HIGH
+    cve: "CVE-2026-28456"
+    cvss: 8.6
+    ghsa: "GHSA-v6c6-vqqg-w888"
+    message: "Arbitrary code execution via unsafe hook module path handling detected"
+    conditions:
+      - type: string
+        value: hook
+      - type: pattern
+        value: \\.\\.\/|\\..*\\.|path.*traversal
+      - type: string
+        value: module
+      - type: function
+        value: require
+    remediation: "Validate all hook module paths against strict allowlist"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28456"
+
+  # CVE-2026-28462: Path Traversal in Trace and Download
+  - id: cve_2026_28462_trace_traversal
+    type: path_traversal_output
+    severity: HIGH
+    cve: "CVE-2026-28462"
+    cvss: 8.7
+    ghsa: "GHSA-gq9c-wg68-gwj2"
+    message: "Path traversal in trace and download output paths detected"
+    conditions:
+      - type: pattern
+        value: \\.\\.\/|\.\.\\|
+      - type: string
+        value: trace
+      - type: string
+        value: download
+      - type: string
+        value: outputPath
+    remediation: "Sanitize all file paths before trace/download operations"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28462"
+
+  # CVE-2026-28463: Arbitrary File Read via Shell Expansion
+  - id: cve_2026_28463_shell_expansion
+    type: shell_expansion_lfi
+    severity: HIGH
+    cve: "CVE-2026-28463"
+    cvss: 8.6
+    ghsa: "GHSA-xvhf-x56f-2hpp"
+    message: "Arbitrary file read via shell expansion in safe bins allowlist detected"
+    conditions:
+      - type: pattern
+        value: \\*|\\?|\[.*\\]|\\$
+      - type: string
+        value: safeBins
+      - type: string
+        value: allowlist
+      - type: function
+        value: exec
+    remediation: "Disable shell glob expansion in safe bins validation"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28463"
+
+  # CVE-2026-28468: Authentication Bypass in Sandbox Browser Bridge
+  - id: cve_2026_28468_browser_bridge_bypass
+    type: browser_auth_bypass
+    severity: HIGH
+    cve: "CVE-2026-28468"
+    cvss: 8.5
+    ghsa: "GHSA-h9g4-589h-68xv"
+    message: "Authentication bypass in sandbox browser bridge server detected"
+    conditions:
+      - type: string
+        value: browser
+      - type: string
+        value: bridge
+      - type: string
+        value: websocket
+      - type: pattern
+        value: localhost|127\.0\.0\.1|::1
+    remediation: "Require authentication for all browser bridge endpoints"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28468"
+
+  # CVE-2026-25157: OS Command Injection via Project Root Path
+  - id: cve_2026_25157_ssh_injection
+    type: ssh_command_injection
+    severity: HIGH
+    cve: "CVE-2026-25157"
+    cvss: 7.8
+    ghsa: "GHSA-q284-4pvr-m585"
+    message: "OS command injection via project root path in sshNodeCommand detected"
+    conditions:
+      - type: function
+        value: exec
+      - type: function
+        value: spawn
+      - type: string
+        value: ssh
+      - type: pattern
+        value: \\|.*\\||;.*;|&&|\`\\(
+    remediation: "Never pass project root paths directly to SSH commands"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-25157"
+
+  # CVE-2026-27002: Docker Container Escape
+  - id: cve_2026_27002_container_escape
+    type: docker_bind_mount_escape
+    severity: HIGH
+    cve: "CVE-2026-27002"
+    cvss: 7.7
+    ghsa: "GHSA-w235-x559-36mg"
+    message: "Docker container escape via unvalidated bind mount config injection detected"
+    conditions:
+      - type: string
+        value: docker
+      - type: string
+        value: bind
+      - type: string
+        value: mount
+      - type: pattern
+        value: -v|--volume|hostPath|volumeMounts
+    remediation: "Validate all bind mount configurations against allowlist"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-27002"
+
+  # CVE-2026-26321: Local File Disclosure via Feishu
+  - id: cve_2026_26321_feishu_lfi
+    type: extension_file_disclosure
+    severity: HIGH
+    cve: "CVE-2026-26321"
+    cvss: 7.5
+    ghsa: "GHSA-8jpq-5h99-ff5r"
+    message: "Local file disclosure via sendMediaFeishu in Feishu extension detected"
+    conditions:
+      - type: string
+        value: feishu
+      - type: function
+        value: sendMedia
+      - type: pattern
+        value: file://|/etc/|/home/|/var/
+    remediation: "Block file:// URLs and validate all media paths"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-26321"
+
+  # CVE-2026-26324: SSRF Guard Bypass via IPv6-mapped IPv4
+  - id: cve_2026_26324_ssrf_ipv6
+    type: ssrf_ipv6_bypass
+    severity: HIGH
+    cve: "CVE-2026-26324"
+    cvss: 7.5
+    ghsa: "GHSA-jrvc-8ff5-2f9f"
+    message: "SSRF guard bypass via IPv4-mapped IPv6 (loopback/metadata) detected"
+    conditions:
+      - type: pattern
+        value: ::ffff:127|::1|169\.254\.169\.254|metadata\.amazonaws\.com
+      - type: string
+        value: http
+      - type: string
+        value: fetch
+      - type: string
+        value: url
+    remediation: "Expand SSRF guard checks to IPv4-mapped IPv6 addresses"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-26324"
+
+  # CVE-2026-26316: BlueBubbles Webhook Auth Bypass
+  - id: cve_2026_26316_bluebubbles_bypass
+    type: webhook_loopback_bypass
+    severity: HIGH
+    cve: "CVE-2026-26316"
+    cvss: 7.5
+    ghsa: "GHSA-pchc-86f6-8758"
+    message: "BlueBubbles webhook auth bypass via loopback proxy trust detected"
+    conditions:
+      - type: string
+        value: bluebubbles
+      - type: string
+        value: webhook
+      - type: pattern
+        value: localhost|127\.0\.0\.1|::1|loopback
+      - type: pattern
+        value: x-forwarded-for|x-real-ip
+    remediation: "Never trust proxy headers for webhook authentication"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-26316"
+
+  # CVE-2026-25474: Telegram Webhook Request Forgery
+  - id: cve_2026_25474_telegramForgery
+    type: telegram_webhook_forgery
+    severity: HIGH
+    cve: "CVE-2026-25474"
+    cvss: 7.5
+    ghsa: "GHSA-mp5h-m6qj-6292"
+    message: "Telegram webhook request forgery via missing webhookSecret detected"
+    conditions:
+      - type: string
+        value: telegram
+      - type: string
+        value: webhook
+      - type: pattern
+        value: "!webhookSecret|webhookSecret.*\"\"|webhookSecret.*null"
+    remediation: "Always require and validate webhookSecret for Telegram webhooks"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-25474"
+
+  # CVE-2026-27487: macOS Keychain Command Injection
+  - id: cve_2026_27487_keychain_injection
+    type: keychain_command_injection
+    severity: HIGH
+    cve: "CVE-2026-27487"
+    cvss: 7.6
+    ghsa: "GHSA-4564-pvr2-qq4h"
+    message: "Shell injection in macOS keychain credential write detected"
+    conditions:
+      - type: string
+        value: keychain
+      - type: string
+        value: credential
+      - type: pattern
+        value: security.*add-generic-password|\\|.*\\|
+      - type: function
+        value: exec
+    remediation: "Use security API directly, never build shell commands for keychain"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-27487"
+
+  # CVE-2026-29607: Authorization Bypass (Critical)
+  - id: cve_2026_29607_auth_bypass
+    type: authorization_bypass_critical
+    severity: CRITICAL
+    cve: "CVE-2026-29607"
+    message: "Authorization bypass vulnerability in allow directive detected"
+    conditions:
+      - type: pattern
+        value: allow.*directive|authorization.*bypass|auth.*bypass
+      - type: string
+        value: allow
+      - type: pattern
+        value: permissions|access.*control|auth
+    remediation: "Implement proper authorization checks for all allow directives"
+    references:
+      - "https://www.cve.org/CVERecord?id=CVE-2026-29607"
+
+  # CVE-2026-28478: DoS via Unbounded Webhook Body Buffering
+  - id: cve_2026_28478_webhook_dos
+    type: webhook_dos
+    severity: HIGH
+    cve: "CVE-2026-28478"
+    cvss: 8.7
+    ghsa: "GHSA-q447-rj3r-2cgh"
+    message: "Denial of service via unbounded webhook request body buffering detected"
+    conditions:
+      - type: string
+        value: webhook
+      - type: function
+        value: body
+      - type: pattern
+        value: unlimited|max.*size|content-length
+      - type: string
+        value: buffer
+    remediation: "Implement size limits for webhook request body buffering"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28478"
+
+  # CVE-2026-29609: DoS via Unbounded URL Media Fetch
+  - id: cve_2026_29609_media_dos
+    type: media_fetch_dos
+    severity: HIGH
+    cve: "CVE-2026-29609"
+    cvss: 8.7
+    ghsa: "GHSA-j27p-hq53-9wgc"
+    message: "Denial of service via unbounded URL-backed media fetch detected"
+    conditions:
+      - type: string
+        value: media
+      - type: string
+        value: fetch
+      - type: pattern
+        value: http://|https://
+      - type: pattern
+        value: size.*limit|max.*size|content-length
+    remediation: "Implement size limits for URL-backed media fetching"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-29609"
+
+  # CVE-2026-28479: Cache Poisoning via SHA-1 Hash
+  - id: cve_2026_28479_cache_poisoning
+    type: sha1_cache_poisoning
+    severity: HIGH
+    cve: "CVE-2026-28479"
+    cvss: 8.7
+    ghsa: "GHSA-fh3f-q9qw-93j9"
+    message: "Cache poisoning via deprecated SHA-1 hash in sandbox config detected"
+    conditions:
+      - type: pattern
+        value: sha1|SHA-1|sha-1
+      - type: string
+        value: cache
+      - type: string
+        value: sandbox
+      - type: string
+        value: config
+    remediation: "Use SHA-256 or stronger for cache validation, disable SHA-1"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-28479"
+
+  # CVE-2026-32060: Path Traversal in apply_patch
+  - id: cve_2026_32060_patch_traversal
+    type: patch_path_traversal
+    severity: HIGH
+    cve: "CVE-2026-32060"
+    cvss: 8.7
+    ghsa: "GHSA-r5fq-947m-xm57"
+    message: "Path traversal in apply_patch via crafted paths detected"
+    conditions:
+      - type: function
+        value: apply_patch
+      - type: pattern
+        value: \\.\\.\/|\.\.\\|
+      - type: string
+        value: path
+      - type: string
+        value: patch
+    remediation: "Validate and sanitize all paths in apply_patch"
+    references:
+      - "https://nvd.nist.gov/vuln/detail/CVE-2026-32060"

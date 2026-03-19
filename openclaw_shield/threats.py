@@ -433,6 +433,107 @@ class ThreatDetector:
             'severity': 'HIGH',
             'description': 'Host environment variable injection (GHSA-82g8-464f-2mv7)',
             'remediation': 'Block dangerous host env keys like NODE_OPTIONS'
+        },
+        # Round 5 - Additional 2026 CVE categories
+        'cmd_parsing_bypass': {
+            'severity': 'CRITICAL',
+            'description': 'Command injection via cmd.exe parsing bypass (CVE-2026-28391)',
+            'remediation': 'Properly escape cmd.exe metacharacters in allowlist'
+        },
+        'allowlist_bypass_caller': {
+            'severity': 'CRITICAL',
+            'description': 'Allowlist bypass via empty caller ID (CVE-2026-28446)',
+            'remediation': 'Reject empty caller IDs, require non-empty values'
+        },
+        'command_substitution_bypass': {
+            'severity': 'CRITICAL',
+            'description': 'Exec allowlist bypass via command substitution (CVE-2026-28470)',
+            'remediation': 'Disallow command substitution in exec contexts'
+        },
+        'display_name_spoofing': {
+            'severity': 'CRITICAL',
+            'description': 'Allowlist bypass via display name spoofing (CVE-2026-28474)',
+            'remediation': 'Validate against immutable user IDs'
+        },
+        'hook_module_rce': {
+            'severity': 'HIGH',
+            'description': 'Arbitrary code execution via hook module path (CVE-2026-28456)',
+            'remediation': 'Validate all hook module paths against allowlist'
+        },
+        'path_traversal_output': {
+            'severity': 'HIGH',
+            'description': 'Path traversal in trace/download output (CVE-2026-28462)',
+            'remediation': 'Sanitize all file paths before operations'
+        },
+        'shell_expansion_lfi': {
+            'severity': 'HIGH',
+            'description': 'Arbitrary file read via shell expansion (CVE-2026-28463)',
+            'remediation': 'Disable shell glob expansion in validation'
+        },
+        'browser_auth_bypass': {
+            'severity': 'HIGH',
+            'description': 'Authentication bypass in browser bridge (CVE-2026-28468)',
+            'remediation': 'Require authentication for all browser endpoints'
+        },
+        'ssh_command_injection': {
+            'severity': 'HIGH',
+            'description': 'OS command injection via SSH (CVE-2026-25157)',
+            'remediation': 'Never pass user paths to SSH commands'
+        },
+        'docker_bind_mount_escape': {
+            'severity': 'HIGH',
+            'description': 'Docker container escape via bind mount (CVE-2026-27002)',
+            'remediation': 'Validate all bind mount configurations'
+        },
+        'extension_file_disclosure': {
+            'severity': 'HIGH',
+            'description': 'Local file disclosure via extension (CVE-2026-26321)',
+            'remediation': 'Block file:// URLs and validate paths'
+        },
+        'ssrf_ipv6_bypass': {
+            'severity': 'HIGH',
+            'description': 'SSRF bypass via IPv4-mapped IPv6 (CVE-2026-26324)',
+            'remediation': 'Expand SSRF checks to IPv4-mapped IPv6'
+        },
+        'webhook_loopback_bypass': {
+            'severity': 'HIGH',
+            'description': 'Webhook auth bypass via loopback trust (CVE-2026-26316)',
+            'remediation': 'Never trust proxy headers for auth'
+        },
+        'telegram_webhook_forgery': {
+            'severity': 'HIGH',
+            'description': 'Telegram webhook request forgery (CVE-2026-25474)',
+            'remediation': 'Always require webhookSecret validation'
+        },
+        'keychain_command_injection': {
+            'severity': 'HIGH',
+            'description': 'Keychain shell injection (CVE-2026-27487)',
+            'remediation': 'Use security API directly, no shell commands'
+        },
+        'authorization_bypass_critical': {
+            'severity': 'CRITICAL',
+            'description': 'Authorization bypass vulnerability (CVE-2026-29607)',
+            'remediation': 'Implement proper auth for allow directives'
+        },
+        'webhook_dos': {
+            'severity': 'HIGH',
+            'description': 'DoS via unbounded webhook buffering (CVE-2026-28478)',
+            'remediation': 'Implement size limits for webhook bodies'
+        },
+        'media_fetch_dos': {
+            'severity': 'HIGH',
+            'description': 'DoS via unbounded media fetch (CVE-2026-29609)',
+            'remediation': 'Implement size limits for media fetching'
+        },
+        'sha1_cache_poisoning': {
+            'severity': 'HIGH',
+            'description': 'Cache poisoning via SHA-1 hash (CVE-2026-28479)',
+            'remediation': 'Use SHA-256 or stronger for validation'
+        },
+        'patch_path_traversal': {
+            'severity': 'HIGH',
+            'description': 'Path traversal in apply_patch (CVE-2026-32060)',
+            'remediation': 'Validate and sanitize patch paths'
         }
     }
 

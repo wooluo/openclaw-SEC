@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Security](https://img.shields.io/badge/security-hardened-green.svg)]()
-[![Version](https://img.shields.io/badge/version-1.6.0-cyan.svg)](https://github.com/wooluo/openclaw-security)
+[![Version](https://img.shields.io/badge/version-1.7.0-cyan.svg)](https://github.com/wooluo/openclaw-security)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **OpenClaw Security Shield** 是一个专为 OpenClaw 设计的企业级安全防护系统
@@ -430,29 +430,29 @@ skills:
 
 ## 🎯 威胁检测规则
 
-### 规则概览 (v1.6.0)
+### 规则概览 (v1.7.0)
 
-系统内置 **89 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
+系统内置 **109 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
 
 #### 规则分布统计
 
 | 类别 | 数量 | 覆盖范围 |
 |------|------|----------|
 | 基础规则 | 10 | code_execution, reverse_shell, data_exfiltration 等 |
-| CVE 规则 | 26 | CVE-2026-25253, CVE-2026-25593, CVE-2026-26322 等 |
-| GHSA 规则 | 5 | GHSA-56f2-hvwg-5743, GHSA-82g8-464f-2mv7 等 |
+| CVE 规则 | 44 | CVE-2026-25253, CVE-2026-25593, CVE-2026-26322 等 |
+| GHSA 规则 | 15 | GHSA-56f2-hvwg-5743, GHSA-82g8-464f-2mv7 等 |
 | CNVD 规则 | 2 | CNVD-2026-13544, CNVD-2026-13543 |
 | 知名攻击模式 | 2 | ClawJacked WebSocket 攻击 |
-| 通用攻击模式 | 44 | typosquatting, supply_chain_attack, botnet_c2 等 |
-| **总计** | **89** | 覆盖 **79** 种威胁类别 |
+| 通用攻击模式 | 46 | typosquatting, supply_chain_attack, botnet_c2 等 |
+| **总计** | **109** | 覆盖 **102** 种威胁类别 |
 
 #### 严重性分布
 
 | 严重性 | 数量 | 占比 |
 |--------|------|------|
-| 🔴 CRITICAL | 32 | 36% |
-| 🟠 HIGH | 45 | 51% |
-| 🟡 MEDIUM | 12 | 13% |
+| 🔴 CRITICAL | 38 | 35% |
+| 🟠 HIGH | 55 | 50% |
+| 🟡 MEDIUM | 16 | 15% |
 | 🟢 LOW | 0 | 0% |
 
 ### 基础规则 (rule_001 ~ rule_010)
@@ -470,7 +470,7 @@ skills:
 | rule_009 | data_exfiltration | MEDIUM | 数据外传 |
 | rule_010 | reverse_shell | CRITICAL | 反向 Shell |
 
-### CVE 相关规则 (26条)
+### CVE 相关规则 (44条)
 
 | 规则 ID | CVE | 类型 | 严重性 | 描述 |
 |---------|-----|------|--------|------|
@@ -499,6 +499,26 @@ skills:
 | cve_2026_25593_config_rce | CVE-2026-25593 | cli_path_injection | 🔴 CRITICAL | Config RCE (CVSS 9.8) |
 | cve_2026_28452_archive_dos | CVE-2026-28452 | resource_exhaustion | 🟡 MEDIUM | Archive DoS 攻击 |
 | cve_2026_27488_cron_ssrf | CVE-2026-27488 | extraction_ssrf | 🟠 HIGH | Cron Webhook SSRF |
+| cve_2026_28391_cmd_parsing | CVE-2026-28391 | cmd_parsing_bypass | 🔴 CRITICAL | cmd.exe 解析绕过 (CVSS 9.2) |
+| cve_2026_28446_caller_id | CVE-2026-28446 | allowlist_bypass_caller | 🔴 CRITICAL | Caller ID 绕过 (CVSS 9.2) |
+| cve_2026_28470_cmd_sub | CVE-2026-28470 | command_substitution_bypass | 🔴 CRITICAL | 命令替换绕过 (CVSS 9.2) |
+| cve_2026_28474_display_spoof | CVE-2026-28474 | display_name_spoofing | 🔴 CRITICAL | 显示名欺骗 (CVSS 9.3) |
+| cve_2026_28456_hook_rce | CVE-2026-28456 | hook_module_rce | 🟠 HIGH | Hook 模块 RCE |
+| cve_2026_28462_trace | CVE-2026-28462 | path_traversal_output | 🟠 HIGH | 跟踪路径遍历 |
+| cve_2026_28463_shell | CVE-2026-28463 | shell_expansion_lfi | 🟠 HIGH | Shell 扩展 LFI |
+| cve_2026_28468_browser | CVE-2026-28468 | browser_auth_bypass | 🟠 HIGH | 浏览器认证绕过 |
+| cve_2026_25157_ssh | CVE-2026-25157 | ssh_command_injection | 🟠 HIGH | SSH 命令注入 |
+| cve_2026_27002_docker | CVE-2026-27002 | docker_bind_mount_escape | 🟠 HIGH | Docker 容器逃逸 |
+| cve_2026_26321_feishu | CVE-2026-26321 | extension_file_disclosure | 🟠 HIGH | 飞书扩展文件泄露 |
+| cve_2026_26324_ipv6 | CVE-2026-26324 | ssrf_ipv6_bypass | 🟠 HIGH | IPv6 SSRF 绕过 |
+| cve_2026_26316_bluebubbles | CVE-2026-26316 | webhook_loopback_bypass | 🟠 HIGH | BlueBubbles 绕过 |
+| cve_2026_25474_telegram | CVE-2026-25474 | telegram_webhook_forgery | 🟠 HIGH | Telegram 伪造 |
+| cve_2026_27487_keychain | CVE-2026-27487 | keychain_command_injection | 🟠 HIGH | 钥匙串注入 |
+| cve_2026_29607_auth | CVE-2026-29607 | authorization_bypass_critical | 🔴 CRITICAL | 授权绕过 |
+| cve_2026_28478_webhook_dos | CVE-2026-28478 | webhook_dos | 🟠 HIGH | Webhook DoS |
+| cve_2026_29609_media_dos | CVE-2026-29609 | media_fetch_dos | 🟠 HIGH | 媒体获取 DoS |
+| cve_2026_28479_cache | CVE-2026-28479 | sha1_cache_poisoning | 🟠 HIGH | SHA-1 缓存投毒 |
+| cve_2026_32060_patch | CVE-2026-32060 | patch_path_traversal | 🟠 HIGH | 补丁路径遍历 |
 
 ### CNVD 规则 (2条)
 
@@ -507,7 +527,7 @@ skills:
 | cnvd_2026_13544_identity_forgery | CNVD-2026-13544 | identity_forgery | 🟠 HIGH | 身份伪造漏洞 |
 | cnvd_2026_13543 | CNVD-2026-13543 | dns_tunneling | 🟠 HIGH | DNS 隧道外传 |
 
-### GHSA 规则 (5条)
+### GHSA 规则 (15条)
 
 | 规则 ID | GHSA | 类型 | 严重性 | 描述 |
 |---------|------|--------|--------|------|
@@ -516,6 +536,25 @@ skills:
 | ghsa_c37p_webhook_bypass | GHSA-c37p-4qqg-3p76 | webhook_auth_bypass | 🟡 MEDIUM | Webhook 认证绕过 |
 | ghsa_82g8_host_env | GHSA-82g8-464f-2mv7 | host_env_poisoning | 🟠 HIGH | Host 环境变量注入 |
 | ghsa_w2cg_base64_dos | GHSA-w2cg-vxx6-5xjg | resource_exhaustion | 🟠 HIGH | Base64 DoS 攻击 |
+| ghsa_qj77_cmd_parsing | GHSA-qj77-c3c8-9c3q | cmd_parsing_bypass | 🔴 CRITICAL | cmd.exe 解析绕过 |
+| ghsa_4rj2_caller_id | GHSA-4rj2-gpmh-qq5x | allowlist_bypass_caller | 🔴 CRITICAL | Caller ID 绕过 |
+| ghsa_3hcm_cmd_sub | GHSA-3hcm-ggvf-rch5 | command_substitution_bypass | 🔴 CRITICAL | 命令替换绕过 |
+| ghsa_r5h9_display_spoof | GHSA-r5h9-vjqc-hq3r | display_name_spoofing | 🔴 CRITICAL | 显示名欺骗 |
+| ghsa_v6c6_hook_rce | GHSA-v6c6-vqqg-w888 | hook_module_rce | 🟠 HIGH | Hook 模块 RCE |
+| ghsa_gq9c_trace | GHSA-gq9c-wg68-gwj2 | path_traversal_output | 🟠 HIGH | 跟踪路径遍历 |
+| ghsa_xvhf_shell | GHSA-xvhf-x56f-2hpp | shell_expansion_lfi | 🟠 HIGH | Shell 扩展 LFI |
+| ghsa_h9g4_browser | GHSA-h9g4-589h-68xv | browser_auth_bypass | 🟠 HIGH | 浏览器认证绕过 |
+| ghsa_q284_ssh | GHSA-q284-4pvr-m585 | ssh_command_injection | 🟠 HIGH | SSH 命令注入 |
+| ghsa_w235_docker | GHSA-w235-x559-36mg | docker_bind_mount_escape | 🟠 HIGH | Docker 容器逃逸 |
+| ghsa_8jpq_feishu | GHSA-8jpq-5h99-ff5r | extension_file_disclosure | 🟠 HIGH | 飞书文件泄露 |
+| ghsa_jrvc_ipv6 | GHSA-jrvc-8ff5-2f9f | ssrf_ipv6_bypass | 🟠 HIGH | IPv6 SSRF 绕过 |
+| ghsa_pchc_bluebubbles | GHSA-pchc-86f6-8758 | webhook_loopback_bypass | 🟠 HIGH | BlueBubbles 绕过 |
+| ghsa_mp5h_telegram | GHSA-mp5h-m6qj-6292 | telegram_webhook_forgery | 🟠 HIGH | Telegram 伪造 |
+| ghsa_4564_keychain | GHSA-4564-pvr2-qq4h | keychain_command_injection | 🟠 HIGH | 钥匙串注入 |
+| ghsa_q447_webhook_dos | GHSA-q447-rj3r-2cgh | webhook_dos | 🟠 HIGH | Webhook DoS |
+| ghsa_j27p_media_dos | GHSA-j27p-hq53-9wgc | media_fetch_dos | 🟠 HIGH | 媒体获取 DoS |
+| ghsa_fh3f_cache | GHSA-fh3f-q9qw-93j9 | sha1_cache_poisoning | 🟠 HIGH | SHA-1 缓存投毒 |
+| ghsa_r5fq_patch | GHSA-r5fq-947m-xm57 | patch_path_traversal | 🟠 HIGH | 补丁路径遍历 |
 
 ### 知名攻击模式 (2条)
 
@@ -566,13 +605,30 @@ skills:
 | stored_xss | stored_xss | 🟡 MEDIUM | 存储 XSS |
 | parameter_pollution | parameter_pollution | 🟡 MEDIUM | 参数污染 |
 
-### Round 4 新增规则 (2026 Q1)
+### Round 5 新增规则 (2026 Q1)
 
 | 规则 ID | 类型 | 严重性 | 描述 |
 |---------|------|--------|------|
-| cve_2026_25593_config_rce | cli_path_injection | 🔴 CRITICAL | Config RCE via cliPath |
-| cve_2026_28452_archive_dos | archive_dos | 🟠 HIGH | Archive DoS (Zip/Tar Bomb) |
-| cve_2026_27488_cron_ssrf | extraction_ssrf | 🟠 HIGH | Cron Webhook SSRF |
+| cve_2026_28391_cmd_parsing | cmd_parsing_bypass | 🔴 CRITICAL | cmd.exe 解析绕过 |
+| cve_2026_28446_caller_id | allowlist_bypass_caller | 🔴 CRITICAL | Caller ID 绕过 |
+| cve_2026_28470_cmd_sub | command_substitution_bypass | 🔴 CRITICAL | 命令替换绕过 |
+| cve_2026_28474_display_spoof | display_name_spoofing | 🔴 CRITICAL | 显示名欺骗 |
+| cve_2026_28456_hook_rce | hook_module_rce | 🟠 HIGH | Hook 模块 RCE |
+| cve_2026_28462_trace | path_traversal_output | 🟠 HIGH | 跟踪路径遍历 |
+| cve_2026_28463_shell | shell_expansion_lfi | 🟠 HIGH | Shell 扩展 LFI |
+| cve_2026_28468_browser | browser_auth_bypass | 🟠 HIGH | 浏览器认证绕过 |
+| cve_2026_25157_ssh | ssh_command_injection | 🟠 HIGH | SSH 命令注入 |
+| cve_2026_27002_docker | docker_bind_mount_escape | 🟠 HIGH | Docker 容器逃逸 |
+| cve_2026_26321_feishu | extension_file_disclosure | 🟠 HIGH | 飞书文件泄露 |
+| cve_2026_26324_ipv6 | ssrf_ipv6_bypass | 🟠 HIGH | IPv6 SSRF 绕过 |
+| cve_2026_26316_bluebubbles | webhook_loopback_bypass | 🟠 HIGH | BlueBubbles 绕过 |
+| cve_2026_25474_telegram | telegram_webhook_forgery | 🟠 HIGH | Telegram 伪造 |
+| cve_2026_27487_keychain | keychain_command_injection | 🟠 HIGH | 钥匙串注入 |
+| cve_2026_29607_auth | authorization_bypass_critical | 🔴 CRITICAL | 授权绕过 |
+| cve_2026_28478_webhook_dos | webhook_dos | 🟠 HIGH | Webhook DoS |
+| cve_2026_29609_media_dos | media_fetch_dos | 🟠 HIGH | 媒体获取 DoS |
+| cve_2026_28479_cache | sha1_cache_poisoning | 🟠 HIGH | SHA-1 缓存投毒 |
+| cve_2026_32060_patch | patch_path_traversal | 🟠 HIGH | 补丁路径遍历 |
 | ghsa_82g8_host_env_injection | host_env_injection | 🟠 HIGH | Host 环境变量注入 |
 | ghsa_w2cg_base64_dos | base64_dos | 🟡 MEDIUM | Base64 DoS 攻击 |
 | cron_job_security | cron_security | 🟡 MEDIUM | Cron 任务安全 |

@@ -50,7 +50,7 @@
 ## 文件结构
 
 ```
-openclaw-SEC/
+openclaw-security/
 ├── openclaw_shield/          # 核心防护引擎
 │   ├── __init__.py           # 模块导出 (v1.1.0)
 │   ├── shield.py              # 主防护类
@@ -122,8 +122,8 @@ openclaw-SEC/
 ### 安装
 ```bash
 # 克隆仓库
-git clone https://github.com/wooluo/openclaw-SEC.git
-cd openclaw-SEC
+git clone https://github.com/wooluo/openclaw-security.git
+cd openclaw-security
 
 # 安装依赖
 pip install -r requirements.txt

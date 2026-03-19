@@ -26,9 +26,9 @@ class AutoUpdater:
     # Update sources
     UPDATE_SOURCES = {
         'github': {
-            'rules_url': 'https://raw.githubusercontent.com/wooluo/openclaw-SEC/main/config/threat_rules.yaml',
-            'blacklist_url': 'https://raw.githubusercontent.com/wooluo/openclaw-SEC/main/config/blacklist.txt',
-            'version_url': 'https://api.github.com/repos/wooluo/openclaw-SEC/releases/latest',
+            'rules_url': 'https://raw.githubusercontent.com/wooluo/openclaw-security/main/config/threat_rules.yaml',
+            'blacklist_url': 'https://raw.githubusercontent.com/wooluo/openclaw-security/main/config/blacklist.txt',
+            'version_url': 'https://api.github.com/repos/wooluo/openclaw-security/releases/latest',
         },
         # Alternative sources (backup)
         'backup': {

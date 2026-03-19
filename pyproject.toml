@@ -99,10 +99,10 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/wooluo/openclaw-SEC"
-Documentation = "https://github.com/wooluo/openclaw-SEC/blob/main/README.md"
-Repository = "https://github.com/wooluo/openclaw-SEC.git"
-Issues = "https://github.com/wooluo/openclaw-SEC/issues"
+Homepage = "https://github.com/wooluo/openclaw-security"
+Documentation = "https://github.com/wooluo/openclaw-security/blob/main/README.md"
+Repository = "https://github.com/wooluo/openclaw-security.git"
+Issues = "https://github.com/wooluo/openclaw-security/issues"
 
 [project.scripts]
 openclaw-shield = "openclaw_shield.cli:main"

@@ -418,6 +418,21 @@ class ThreatDetector:
             'severity': 'CRITICAL',
             'description': 'Config manipulation via WebSocket API',
             'remediation': 'Restrict config modifications to authenticated admin only'
+        },
+        'archive_dos': {
+            'severity': 'HIGH',
+            'description': 'Archive DoS (Zip/Tar Bomb) (CVE-2026-28452)',
+            'remediation': 'Validate archive size and implement resource limits'
+        },
+        'base64_dos': {
+            'severity': 'MEDIUM',
+            'description': 'DoS via large base64 media files (GHSA-w2cg-vxx6-5xjg)',
+            'remediation': 'Limit base64 file size and validate before processing'
+        },
+        'host_env_injection': {
+            'severity': 'HIGH',
+            'description': 'Host environment variable injection (GHSA-82g8-464f-2mv7)',
+            'remediation': 'Block dangerous host env keys like NODE_OPTIONS'
         }
     }
 

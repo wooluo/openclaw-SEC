@@ -434,6 +434,27 @@ skills:
 
 系统内置 **89 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
 
+#### 规则分布统计
+
+| 类别 | 数量 | 覆盖范围 |
+|------|------|----------|
+| 基础规则 | 10 | code_execution, reverse_shell, data_exfiltration 等 |
+| CVE 规则 | 26 | CVE-2026-25253, CVE-2026-25593, CVE-2026-26322 等 |
+| GHSA 规则 | 5 | GHSA-56f2-hvwg-5743, GHSA-82g8-464f-2mv7 等 |
+| CNVD 规则 | 2 | CNVD-2026-13544, CNVD-2026-13543 |
+| 知名攻击模式 | 2 | ClawJacked WebSocket 攻击 |
+| 通用攻击模式 | 44 | typosquatting, supply_chain_attack, botnet_c2 等 |
+| **总计** | **89** | 覆盖 **79** 种威胁类别 |
+
+#### 严重性分布
+
+| 严重性 | 数量 | 占比 |
+|--------|------|------|
+| 🔴 CRITICAL | 32 | 36% |
+| 🟠 HIGH | 45 | 51% |
+| 🟡 MEDIUM | 12 | 13% |
+| 🟢 LOW | 0 | 0% |
+
 ### 基础规则 (rule_001 ~ rule_010)
 
 | 规则 ID | 类型 | 严重性 | 描述 |
@@ -503,9 +524,6 @@ skills:
 | clawjacked_ws_brute | ClawJacked | websocket_brute_force | 🔴 CRITICAL | WebSocket 暴力破解 |
 | clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
 
----
-| clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
-
 ### 攻击模式检测规则
 
 | 规则 ID | 类型 | 严重性 | 描述 |
@@ -544,32 +562,24 @@ skills:
 | runaway_api_cost | runaway_api_cost | 🟡 MEDIUM | API 成本失控 |
 | oauth_overreach | oauth_overreach | 🟠 HIGH | OAuth 权限过度 |
 | dns_tunneling | dns_tunneling | 🟠 HIGH | DNS 隧道外渗 |
+| request_side_forgery | request_side_forgery | 🟠 HIGH | Request-Side Forgery |
+| stored_xss | stored_xss | 🟡 MEDIUM | 存储 XSS |
+| parameter_pollution | parameter_pollution | 🟡 MEDIUM | 参数污染 |
 
----
-| clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
-
-### 攻击模式检测规则
+### Round 4 新增规则 (2026 Q1)
 
 | 规则 ID | 类型 | 严重性 | 描述 |
 |---------|------|--------|------|
-| clawhavoc_typosquatting | typosquatting | 🟠 HIGH | 包名仿冒攻击 |
-| clawhavoc_malicious_skill | supply_chain_attack | 🔴 CRITICAL | ClawHavoc 供应链攻击 |
-| clawdrain_trojan | trojan_skill | 🔴 CRITICAL | Clawdrain 木马技能 |
-| cve_path_traversal | path_traversal | 🟠 HIGH | 路径遍历 |
-| cve_lfi | local_file_inclusion | 🟠 HIGH | 本地文件包含 |
-| cve_env_injection | env_injection | 🟠 HIGH | 环境变量注入 |
-| cve_dns_exfiltration | dns_exfiltration | 🟠 HIGH | DNS 数据外渗 |
-| cve_cryptomining | cryptomining | 🔴 CRITICAL | 加密货币挖矿 |
-| cve_botnet_c2 | botnet_c2 | 🔴 CRITICAL | 僵尸网络 C2 |
-| cve_container_escape | container_escape | 🔴 CRITICAL | 容器逃逸 |
-| cve_privilege_escalation | privilege_escalation | 🟠 HIGH | 权限提升 |
-| cve_prompt_injection | prompt_injection | 🟠 HIGH | LLM 提示注入 |
-| cve_api_key_harvesting | api_key_harvesting | 🔴 CRITICAL | API 密钥窃取 |
-| log_poisoning | log_poisoning | 🟠 HIGH | 日志投毒攻击 |
-| indirect_prompt_injection | indirect_prompt_injection | 🟠 HIGH | 间接提示注入 |
-| infostealer_pattern | infostealer | 🔴 CRITICAL | 窃密木马检测 |
-| shadow_ai_operations | shadow_ai | 🟡 MEDIUM | 影子 AI 操作 |
-| llm_tool_injection | tool_injection | 🟠 HIGH | LLM 工具注入 |
+| cve_2026_25593_config_rce | cli_path_injection | 🔴 CRITICAL | Config RCE via cliPath |
+| cve_2026_28452_archive_dos | archive_dos | 🟠 HIGH | Archive DoS (Zip/Tar Bomb) |
+| cve_2026_27488_cron_ssrf | extraction_ssrf | 🟠 HIGH | Cron Webhook SSRF |
+| ghsa_82g8_host_env_injection | host_env_injection | 🟠 HIGH | Host 环境变量注入 |
+| ghsa_w2cg_base64_dos | base64_dos | 🟡 MEDIUM | Base64 DoS 攻击 |
+| cron_job_security | cron_security | 🟡 MEDIUM | Cron 任务安全 |
+| cli_path_injection | cli_path_injection | 🔴 CRITICAL | CLI 路径注入 |
+| host_env_poisoning | host_env_poisoning | 🟠 HIGH | 主机环境投毒 |
+| skill_config_injection | skill_config_injection | 🟠 HIGH | Skill 配置注入 |
+| websocket_config_manipulation | websocket_config_manipulation | 🔴 CRITICAL | WebSocket 配置篡改 |
 
 ---
 

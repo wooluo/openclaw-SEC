@@ -430,9 +430,9 @@ skills:
 
 ## 🎯 威胁检测规则
 
-### 规则概览 (v1.2.0)
+### 规则概览 (v1.3.0)
 
-系统内置 **27 条** 检测规则，涵盖通用威胁和 CVE 相关漏洞。
+系统内置 **40 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
 
 ### 基础规则 (rule_001 ~ rule_010)
 
@@ -449,7 +449,7 @@ skills:
 | rule_009 | data_exfiltration | MEDIUM | 数据外传 |
 | rule_010 | reverse_shell | CRITICAL | 反向 Shell |
 
-### CVE 相关规则
+### CVE 相关规则 (8条)
 
 | 规则 ID | CVE | 类型 | 严重性 | 描述 |
 |---------|-----|------|--------|------|
@@ -457,6 +457,25 @@ skills:
 | cve_2026_25253_token | CVE-2026-25253 | token_theft | 🔴 CRITICAL | 认证令牌窃取 |
 | cve_2026_26322_ssrf | CVE-2026-26322 | ssrf_attack | 🟠 HIGH | SSRF 攻击 |
 | cve_2026_24763_path_injection | CVE-2026-24763 | command_injection | 🔴 CRITICAL | PATH 命令注入 |
+| cve_2026_26319_webhook | CVE-2026-26319 | missing_auth | 🟠 HIGH | Webhook 认证缺失 |
+| cve_2026_26329_upload | CVE-2026-26329 | file_upload_traversal | 🟠 HIGH | 文件上传路径遍历 |
+| cve_2026_29610_path_hijack | CVE-2026-29610 | path_hijacking | 🔴 CRITICAL | PATH 劫持命令执行 |
+| clawjacked_ws_brute | CVE-2026-25253 | websocket_brute_force | 🔴 CRITICAL | ClawJacked 暴力破解 |
+
+### GHSA 规则 (3条)
+
+| 规则 ID | GHSA | 类型 | 严重性 | 描述 |
+|---------|------|--------|--------|------|
+| ghsa_56f2_image_ssrf | GHSA-56f2-hvwg-5743 | image_tool_ssrf | 🟠 HIGH | 图片工具 SSRF |
+| ghsa_pg2v_urbit_ssrf | GHSA-pg2v-8xwh-qhcc | urbit_auth_ssrf | 🟡 MEDIUM | Urbit 认证 SSRF |
+| ghsa_c37p_webhook_bypass | GHSA-c37p-4qqg-3p76 | webhook_auth_bypass | 🟡 MEDIUM | Webhook 认证绕过 |
+
+### 知名攻击模式 (2条)
+
+| 规则 ID | 攻击名称 | 类型 | 严重性 | 描述 |
+|---------|----------|--------|--------|------|
+| clawjacked_ws_brute | ClawJacked | websocket_brute_force | 🔴 CRITICAL | WebSocket 暴力破解 |
+| clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
 
 ### 攻击模式检测规则
 
@@ -475,6 +494,11 @@ skills:
 | cve_privilege_escalation | privilege_escalation | 🟠 HIGH | 权限提升 |
 | cve_prompt_injection | prompt_injection | 🟠 HIGH | LLM 提示注入 |
 | cve_api_key_harvesting | api_key_harvesting | 🔴 CRITICAL | API 密钥窃取 |
+| log_poisoning | log_poisoning | 🟠 HIGH | 日志投毒攻击 |
+| indirect_prompt_injection | indirect_prompt_injection | 🟠 HIGH | 间接提示注入 |
+| infostealer_pattern | infostealer | 🔴 CRITICAL | 窃密木马检测 |
+| shadow_ai_operations | shadow_ai | 🟡 MEDIUM | 影子 AI 操作 |
+| llm_tool_injection | tool_injection | 🟠 HIGH | LLM 工具注入 |
 
 ---
 

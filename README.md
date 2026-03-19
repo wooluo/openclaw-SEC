@@ -430,7 +430,11 @@ skills:
 
 ## 🎯 威胁检测规则
 
-### 内置规则类型
+### 规则概览 (v1.2.0)
+
+系统内置 **27 条** 检测规则，涵盖通用威胁和 CVE 相关漏洞。
+
+### 基础规则 (rule_001 ~ rule_010)
 
 | 规则 ID | 类型 | 严重性 | 描述 |
 |---------|------|--------|------|
@@ -445,18 +449,32 @@ skills:
 | rule_009 | data_exfiltration | MEDIUM | 数据外传 |
 | rule_010 | reverse_shell | CRITICAL | 反向 Shell |
 
-### 高级威胁检测
+### CVE 相关规则
 
-系统还支持检测以下高级威胁模式：
+| 规则 ID | CVE | 类型 | 严重性 | 描述 |
+|---------|-----|------|--------|------|
+| cve_2026_25253_websocket | CVE-2026-25253 | websocket_hijacking | 🔴 CRITICAL | WebSocket 劫持攻击 |
+| cve_2026_25253_token | CVE-2026-25253 | token_theft | 🔴 CRITICAL | 认证令牌窃取 |
+| cve_2026_26322_ssrf | CVE-2026-26322 | ssrf_attack | 🟠 HIGH | SSRF 攻击 |
+| cve_2026_24763_path_injection | CVE-2026-24763 | command_injection | 🔴 CRITICAL | PATH 命令注入 |
 
-- **依赖混淆攻击** (Dependency Confusion)
-- **包名仿冒** (Typosquatting)
-- **加密货币挖矿** (Cryptojacking)
-- **僵尸网络** (Botnet C2)
-- **DNS 数据外传** (DNS Exfiltration)
-- **容器逃逸** (Container Escape)
-- **权限提升** (Privilege Escalation)
-- **横向移动** (Lateral Movement)
+### 攻击模式检测规则
+
+| 规则 ID | 类型 | 严重性 | 描述 |
+|---------|------|--------|------|
+| clawhavoc_typosquatting | typosquatting | 🟠 HIGH | 包名仿冒攻击 |
+| clawhavoc_malicious_skill | supply_chain_attack | 🔴 CRITICAL | ClawHavoc 供应链攻击 |
+| clawdrain_trojan | trojan_skill | 🔴 CRITICAL | Clawdrain 木马技能 |
+| cve_path_traversal | path_traversal | 🟠 HIGH | 路径遍历 |
+| cve_lfi | local_file_inclusion | 🟠 HIGH | 本地文件包含 |
+| cve_env_injection | env_injection | 🟠 HIGH | 环境变量注入 |
+| cve_dns_exfiltration | dns_exfiltration | 🟠 HIGH | DNS 数据外渗 |
+| cve_cryptomining | cryptomining | 🔴 CRITICAL | 加密货币挖矿 |
+| cve_botnet_c2 | botnet_c2 | 🔴 CRITICAL | 僵尸网络 C2 |
+| cve_container_escape | container_escape | 🔴 CRITICAL | 容器逃逸 |
+| cve_privilege_escalation | privilege_escalation | 🟠 HIGH | 权限提升 |
+| cve_prompt_injection | prompt_injection | 🟠 HIGH | LLM 提示注入 |
+| cve_api_key_harvesting | api_key_harvesting | 🔴 CRITICAL | API 密钥窃取 |
 
 ---
 

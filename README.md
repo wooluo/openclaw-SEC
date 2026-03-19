@@ -430,9 +430,9 @@ skills:
 
 ## 🎯 威胁检测规则
 
-### 规则概览 (v1.4.0)
+### 规则概览 (v1.5.0)
 
-系统内置 **65 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
+系统内置 **75 条** 检测规则，涵盖通用威胁、CVE 相关漏洞和知名攻击模式。
 
 ### 基础规则 (rule_001 ~ rule_010)
 
@@ -449,7 +449,7 @@ skills:
 | rule_009 | data_exfiltration | MEDIUM | 数据外传 |
 | rule_010 | reverse_shell | CRITICAL | 反向 Shell |
 
-### CVE 相关规则 (17条)
+### CVE 相关规则 (23条)
 
 | 规则 ID | CVE | 类型 | 严重性 | 描述 |
 |---------|-----|------|--------|------|
@@ -469,6 +469,18 @@ skills:
 | cve_2026_22817_jwt | CVE-2026-22817 | jwt_algorithm_confusion | 🟠 HIGH | JWT 算法混淆 |
 | cve_2026_22818_jwks | CVE-2026-22818 | jwks_missing_alg | 🟠 HIGH | JWKS 缺失算法 |
 | cve_2026_28393_hook_path | CVE-2026-28393 | hook_path_traversal | 🟠 HIGH | Hook 路径遍历 |
+| cve_2026_28466_approval_bypass | CVE-2026-28466 | approval_bypass | 🔴 CRITICAL | 审批绕过 (CVSS 9.4) |
+| cve_2026_27486_process_cleanup | CVE-2026-27486 | process_ownership_bypass | 🟡 MEDIUM | 进程清理绕过 |
+| cve_2026_32063_systemd_injection | CVE-2026-32063 | systemd_injection | 🟠 HIGH | Systemd 注入 |
+| cve_2026_26325_allowlist_bypass | CVE-2026-26325 | allowlist_bypass | 🟠 HIGH | 白名单绕过 |
+| cve_2026_26323_script_injection | CVE-2026-26323 | script_command_injection | 🟠 HIGH | 脚本命令注入 |
+| cve_2026_26320 | CVE-2026-26320 | input_sanitization | 🟠 HIGH | 输入清理漏洞 |
+
+### CNVD 规则 (1条)
+
+| 规则 ID | CNVD | 类型 | 严重性 | 描述 |
+|---------|------|--------|--------|------|
+| cnvd_2026_13544_identity_forgery | CNVD-2026-13544 | identity_forgery | 🟠 HIGH | 身份伪造漏洞 |
 
 ### GHSA 规则 (3条)
 
@@ -483,6 +495,9 @@ skills:
 | 规则 ID | 攻击名称 | 类型 | 严重性 | 描述 |
 |---------|----------|--------|--------|------|
 | clawjacked_ws_brute | ClawJacked | websocket_brute_force | 🔴 CRITICAL | WebSocket 暴力破解 |
+| clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
+
+---
 | clawjacked_auto_approve | ClawJacked | auto_device_approval | 🟠 HIGH | 自动设备批准漏洞 |
 
 ### 攻击模式检测规则

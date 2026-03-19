@@ -4,6 +4,7 @@ Test threat detection rules for false positives and effectiveness
 """
 import sys
 import os
+import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from openclaw_shield.scanner import SkillScanner
